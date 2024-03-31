@@ -1,0 +1,62 @@
+server:
+  port: 9527
+
+spring:
+  application:
+    name: cloud-gateway #以微服务注册进consul或nacos服务列表内
+  cloud:
+    #consul服务注册
+    consul: #配置consul地址
+      host: localhost
+      port: 8500
+      discovery:
+        prefer-ip-address: true
+        service-name: ${spring.application.name}
+    # 网关配置
+    gateway:
+      routes:
+        - id: pay_routh3 #pay_routh3
+          uri: lb://cloud-payment-service                #匹配后提供服务的路由地址
+          predicates:
+            - Path=/pay/gateway/filter/**              # 断言，路径相匹配的进行路由
+#            - Path=/gateway/filter/**              # 断言，为配合PrefixPath测试过滤，暂时注释掉/pay
+#            - Path=/XYZ/abc/{segment}           # 断言，为配合SetPath测试，{segment}的内容最后被SetPath取代
+          filters:
+            - My=ziheng
+#            - RedirectTo=302, http://124.71.37.187/ # 访问http://localhost:9527/pay/gateway/filter跳转到http://124.71.37.187/
+#            - SetPath=/pay/gateway/{segment}  # {segment}表示占位符，你写abc也行但要上下一致
+#            - PrefixPath=/pay # http://localhost:9527/pay/gateway/filter
+#            - AddRequestHeader=X-Request-ziheng1,zihengValue1  # 请求头kv，若一头含有多参则重写一行设置
+#            - AddRequestHeader=X-Request-ziheng2,zihengValue2
+#            - RemoveRequestHeader=sec-fetch-site      # 删除请求头sec-fetch-site
+#            - SetRequestHeader=sec-fetch-mode, 666sssss # 将请求头sec-fetch-mode对应的值修改为666sssss
+#            - AddRequestParameter=customerId,9527001 # 新增请求参数Parameter：k ，v
+#            - RemoveRequestParameter=customerName   # 删除url请求参数customerName，你传递过来也是null
+#            - AddResponseHeader=X-Response-ziheng, BlueResponse # 新增请求参数X-Response-ziheng并设值为BlueResponse
+#            - SetResponseHeader=Date,2099-11-11 # 设置回应头Date值为2099-11-11
+#            - RemoveResponseHeader=Content-Type # 将默认自带Content-Type回应属性删除
+
+
+        - id: pay_routh1 #pay_routh1                #路由的ID(类似mysql主键ID)，没有固定规则但要求唯一，建议配合服务名
+#          uri: http://localhost:8001                #匹配后提供服务的路由地址
+          uri: lb://cloud-payment-service
+          predicates:
+            - Path=/pay/gateway/get/**              # 断言，路径相匹配的进行路由
+#            - My=diamond
+#            - name: My
+#              args:
+#                userType: diamond
+#            - My=diamond
+#            - RemoteAddr=192.168.229.1/24 # 外部访问我的IP限制，最大跨度不超过32，目前是1~24它们是 CIDR 表示法。
+#            - Query=username, \d+  # 要有参数名username并且值还要是整数才能路由
+#            - Host=**.ziheng.com
+#            - Header=X-Request-Id, \d+  # 请求头要有X-Request-Id属性并且值为整数的正则表达式
+#            - Cookie=username,ziheng
+#            - Between=2024-03-26T09:17:05.640663600+08:00[Asia/Singapore], 2024-03-26T09:18:05.640663600+08:00[Asia/Singapore]
+
+
+        - id: pay_routh2 #pay_routh2                #路由的ID(类似mysql主键ID)，没有固定规则但要求唯一，建议配合服务名
+#          uri: http://localhost:8001                #匹配后提供服务的路由地址
+          uri: lb://cloud-payment-service
+          predicates:
+            - Path=/pay/gateway/info/**              # 断言，路径相匹配的进行路由
